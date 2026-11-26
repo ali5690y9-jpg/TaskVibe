@@ -32,17 +32,17 @@ export default function Home() {
         </div>
         <div className="hero-art" aria-label="TaskVibe campaign preview">
           <div className="orbit orbit-one" /><div className="orbit orbit-two" />
-          <div className="float-card float-top"><span className="mini-icon pink">◎</span><span><b>New task completed</b><small>Instagram · just now</small></span><strong>+ $0.35</strong></div>
+          <div className="float-card float-top"><span className="mini-icon pink">◎</span><span><b>Example campaign</b><small>Instagram · preview</small></span><strong>Sample</strong></div>
           <div className="phone">
             <div className="phone-head"><span className="brand-mark">t</span><b>Good afternoon 👋</b><span className="bell">♧</span></div>
             <p className="phone-muted">Your progress is looking good.</p>
             <div className="balance-card"><small>TASKVIBE PREVIEW</small><strong>Find your <span>next task</span></strong><div className="balance-foot"><span>Campaigns appear here when published</span><span>•••</span></div></div>
-            <div className="phone-section"><b>Available tasks</b><a href="#platforms">View all ↗</a></div>
+            <div className="phone-section"><b>Example tasks</b><a href="#platforms">View all ↗</a></div>
             <div className="task-row"><span className="mini-icon pink">◎</span><span><b>Follow Instagram page</b><small>Social · 2 min</small></span><strong>$0.25</strong></div>
             <div className="task-row"><span className="mini-icon red">▶</span><span><b>Watch a YouTube video</b><small>Video · 3 min</small></span><strong>$0.40</strong></div>
             <div className="task-row"><span className="mini-icon violet">♪</span><span><b>Like a TikTok post</b><small>Social · 1 min</small></span><strong>$0.15</strong></div>
           </div>
-          <div className="float-card float-bottom"><span className="success-icon">✓</span><span><b>Payment approved</b><small>USDT · BEP-20</small></span><strong>$12.00</strong></div>
+          <div className="float-card float-bottom"><span className="success-icon">✓</span><span><b>Wallet connection</b><small>USDT · BEP-20</small></span><strong>Planned</strong></div>
           <div className="sparkle sparkle-a">✳</div><div className="sparkle sparkle-b">✦</div>
         </div>
       </section>
