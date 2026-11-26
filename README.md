@@ -12,7 +12,7 @@ Independent social-task marketplace for earners, advertisers and administrators.
 - Earner proof submission form and duplicate submission index.
 - Admin-only submission review endpoint.
 - One-time initial admin bootstrap endpoint with a deployment secret and database lock.
-- Authenticated read-only wallet ledger API.
+- WalletConnect on BNB Smart Chain (chain ID 56), one-time wallet ownership challenge and server-side signature verification.\n- Authenticated read-only wallet ledger API.
 - API smoke-test script and MongoDB readiness endpoint.
 
 ## Local setup
@@ -27,7 +27,7 @@ Independent social-task marketplace for earners, advertisers and administrators.
 
 Never reuse SocialPromo database credentials, secrets, Telegram bot credentials or wallet settings.
 
-## Smoke tests
+## Wallet connection setup\n1. Create a Reown/WalletConnect project at https://cloud.reown.com.\n2. Add its public project ID as `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` in the TaskVibe Preview environment and local `.env.local`.\n3. Sign in and open `/wallet`; connect a wallet using WalletConnect and approve the ownership signature on BNB Smart Chain (chain ID 56).\n4. The signature is a message signature only; it does not request token approval or transfer funds. Wallet addresses are unique per TaskVibe account and cannot be changed through the UI.\n5. This only links an address. No USDT deposit detection, balance accounting, token transfer, or withdrawal is enabled.\n\n## Smoke tests
 With the app running, run `npm run test:smoke`. Optionally set `TASKVIBE_BASE_URL` to a staging URL. This covers basic unauthenticated API behavior only; it is not a full end-to-end or security test.
 
 ## Not production-ready
