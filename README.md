@@ -31,7 +31,7 @@ Never reuse SocialPromo database credentials, secrets, Telegram bot credentials 
 ## Wallet connection setup
 1. Create a Reown/WalletConnect project at https://cloud.reown.com.
 2. Add its public project ID as `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` in the TaskVibe Preview environment and local `.env.local`.
-3. Sign in and open `/wallet`; connect a wallet using WalletConnect and approve the ownership signature on BNB Smart Chain (chain ID 56).
+3. Sign in and open `/wallet`; connect an injected browser wallet (such as a compatible Trust Wallet/MetaMask browser) or use WalletConnect QR pairing, then approve the ownership signature on BNB Smart Chain (chain ID 56).
 4. The signature is a message signature only; it does not request token approval or transfer funds. Wallet addresses are unique per TaskVibe account and cannot be changed through the UI.
 5. This only links an address. No USDT deposit detection, balance accounting, token transfer, or withdrawal is enabled.
 

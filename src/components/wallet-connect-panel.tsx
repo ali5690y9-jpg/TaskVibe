@@ -112,7 +112,7 @@ export default function WalletConnectPanel() {
         <div>
           <span className="eyebrow">BEP-20 WALLET</span>
           <h2>{wallet ? "Wallet linked" : "Connect your wallet"}</h2>
-          <p>Link your own wallet using WalletConnect on BNB Smart Chain.</p>
+          <p>Link your own wallet using a compatible browser wallet or WalletConnect on BNB Smart Chain.</p>
         </div>
         <span className="wallet-network">BNB Chain · 56</span>
       </div>
@@ -124,7 +124,7 @@ export default function WalletConnectPanel() {
         </div>
       ) : (
         <button className="wallet-connect-button" onClick={connect} disabled={busy}>
-          {busy ? "Connecting…" : "Connect with WalletConnect"}
+          {busy ? "Connecting…" : "Connect wallet"}
         </button>
       )}
       {message && <p className="wallet-message" role="status">{message}</p>}
