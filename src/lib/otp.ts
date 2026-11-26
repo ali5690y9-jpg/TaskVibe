@@ -1,5 +1,5 @@
 import "server-only";
-import { createHash, createHmac, randomInt, timingSafeEqual } from "node:crypto";
+import { createHmac, randomInt, timingSafeEqual } from "node:crypto";
 import { getDb } from "@/lib/mongodb";
 import { sendVerificationCode } from "@/lib/email";
 function otpSecret(){const s=process.env.OTP_SECRET;if(!s||s.length<32)throw new Error("OTP_SECRET must be a random value of at least 32 characters.");return s;}
