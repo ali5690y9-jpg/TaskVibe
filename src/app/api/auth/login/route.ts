@@ -17,7 +17,7 @@ export async function POST(request:Request) {
     if(user.emailVerified!==true) return NextResponse.json({error:"Please verify your email before signing in."},{status:403});
     const role=user.role as Role;
     if(!["earner","advertiser","admin"].includes(role)) return NextResponse.json({error:"Account role is invalid."},{status:403});
-    await setSession({id:user._id.toString(),name:user.name,email:user.email,role});
+    await setSession({id:user._id.toString(),name:user.name,email:user.email,role,sessionVersion:user.sessionVersion??0});
     return NextResponse.json({user:{id:user._id.toString(),name:user.name,email:user.email,role}});
   } catch(error) { console.error("TaskVibe login failed",error); return NextResponse.json({error:"Login unavailable. Check server configuration."},{status:503}); }
 }

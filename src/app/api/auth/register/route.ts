@@ -13,7 +13,7 @@ export async function POST(request:Request){
   const db=await getDb();await db.collection("users").createIndex({email:1},{unique:true});
   const existing=await db.collection("users").findOne({email},{projection:{_id:1,status:1}});
   if(existing)return NextResponse.json({error:"An account with this email already exists."},{status:409});
-  const now=new Date(),result=await db.collection("users").insertOne({name:data.name,email,role:data.role,passwordHash:await hashPassword(data.password),status:"pending_verification",emailVerified:false,createdAt:now,updatedAt:now});
+  const now=new Date(),result=await db.collection("users").insertOne({name:data.name,email,role:data.role,passwordHash:await hashPassword(data.password),status:"pending_verification",emailVerified:false,sessionVersion:0,createdAt:now,updatedAt:now});
   try{await issueEmailOtp(email,"verify_email");}catch(error){await db.collection("users").deleteOne({_id:result.insertedId,status:"pending_verification"});throw error;}
   return NextResponse.json({verificationRequired:true,email,message:"A verification code has been sent to your email."},{status:201});
  }catch(error){if(error&&typeof error==="object"&&"code"in error&&error.code===11000)return NextResponse.json({error:"An account with this email already exists."},{status:409});console.error("TaskVibe registration failed",error);return NextResponse.json({error:"Registration or email delivery unavailable. Check SMTP configuration."},{status:503});}

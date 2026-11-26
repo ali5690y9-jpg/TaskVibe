@@ -12,7 +12,7 @@ export async function POST(request:Request){
  const db=await getDb();const changed=await db.collection("users").updateOne({email,status:"pending_verification"},{$set:{status:"active",emailVerified:true,updatedAt:new Date()}});
  if(!changed.modifiedCount)return NextResponse.json({error:"No pending account found for this email."},{status:404});
  const user=await db.collection("users").findOne({email,status:"active"});if(!user)return NextResponse.json({error:"Account could not be loaded."},{status:500});
- const role=user.role as Role;await setSession({id:user._id.toString(),name:user.name,email:user.email,role});
+ const role=user.role as Role;await setSession({id:user._id.toString(),name:user.name,email:user.email,role,sessionVersion:user.sessionVersion??0});
  return NextResponse.json({success:true,role});
  }catch(error){console.error("Email verification failed",error);return NextResponse.json({error:"Verification service unavailable."},{status:503});}
 }

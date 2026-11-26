@@ -13,8 +13,8 @@ export async function POST(request:Request){
  try{
   if(await db.collection("users").countDocuments({role:"admin"}))return NextResponse.json({error:"An administrator already exists. Bootstrap is closed."},{status:409});
   const email=parsed.data.email.toLowerCase(),now=new Date();await db.collection("users").createIndex({email:1},{unique:true});
-  const result=await db.collection("users").insertOne({name:parsed.data.name,email,role:"admin",passwordHash:await hashPassword(parsed.data.password),status:"active",emailVerified:true,createdAt:now,updatedAt:now,provisionedBy:"one_time_bootstrap"});
-  await setSession({id:result.insertedId.toString(),name:parsed.data.name,email,role:"admin"});
+  const result=await db.collection("users").insertOne({name:parsed.data.name,email,role:"admin",passwordHash:await hashPassword(parsed.data.password),status:"active",emailVerified:true,createdAt:now,updatedAt:now,provisionedBy:"one_time_bootstrap",sessionVersion:0});
+  await setSession({id:result.insertedId.toString(),name:parsed.data.name,email,role:"admin",sessionVersion:0});
   return NextResponse.json({success:true,message:"Initial administrator created. Remove ADMIN_BOOTSTRAP_SECRET from deployment settings immediately."},{status:201});
  }catch(error){if(error&&typeof error==="object"&&"code"in error&&error.code===11000)return NextResponse.json({error:"An account with this email already exists."},{status:409});console.error("Admin bootstrap failed; lock retained for safe manual recovery.",error);return NextResponse.json({error:"Admin bootstrap failed. Lock retained; database operator intervention is required."},{status:503});}
 }
