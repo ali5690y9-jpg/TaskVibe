@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { getCurrentUser } from "@/lib/auth";
 import { isAddress, verifyMessage } from "viem";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 const BSC_CHAIN_ID = 56;
@@ -12,6 +13,9 @@ export async function POST(request: Request) {
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
   try {
+    if (!await rateLimit("wallet-connect:" + user.id, 10, 3600)) {
+      return NextResponse.json({ error: "Too many wallet verification attempts. Try again later." }, { status: 429 });
+    }
     const body = await request.json();
     const address = typeof body.address === "string" ? body.address.trim() : "";
     const nonce = typeof body.nonce === "string" ? body.nonce : "";
