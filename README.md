@@ -2,23 +2,40 @@
 
 Independent social-task marketplace for earners, advertisers and administrators.
 
-## Current implementation
-- Earner and advertiser self-registration with normalized unique email addresses.
-- Password hashing with Node.js scrypt and signed HTTP-only session cookies.
-- Separate role-protected earner, advertiser and admin dashboards.
-- Advertiser campaign draft form and campaign listing API.
-- Earner proof submission form and duplicate submission protection.
+## Implemented in this branch
+- Earner/advertiser registration with normalized unique email addresses.
+- Scrypt password hashing and signed HTTP-only session cookies.
+- Gmail SMTP email verification codes with 10-minute expiry, hashed OTP storage, resend throttling and verification attempt limits.
+- Password reset request and OTP-based password reset.
+- Role-protected earner, advertiser and admin dashboards.
+- Advertiser campaign draft form and campaign API.
+- Earner proof submission form and duplicate submission index.
 - Admin-only submission review endpoint.
-- Authenticated read-only wallet ledger endpoint.
+- One-time initial admin bootstrap endpoint with a deployment secret and database lock.
+- Authenticated read-only wallet ledger API.
+- API smoke-test script and MongoDB readiness endpoint.
 
 ## Local setup
 1. Use Node.js 20.9 or newer.
-2. Install dependencies with npm install.
-3. Copy .env.example to .env.local.
-4. Configure a dedicated TaskVibe MongoDB database and a random AUTH_SECRET of at least 32 characters.
-5. Start with npm run dev.
+2. Run `npm install`.
+3. Copy `.env.example` to `.env.local`.
+4. Configure a dedicated TaskVibe MongoDB database.
+5. Set unique random `AUTH_SECRET`, `OTP_SECRET` and temporary `ADMIN_BOOTSTRAP_SECRET` values (at least 32 characters each).
+6. Configure Gmail SMTP app-password credentials in `SMTP_USER`, `SMTP_PASS`, and `SMTP_FROM`.
+7. Run `npm run dev`; check `/api/health/ready`.
+8. Call `POST /api/admin/bootstrap` once with name, email, a 14+ character password and the temporary bootstrap secret. Remove `ADMIN_BOOTSTRAP_SECRET` from the deployment environment immediately after successful creation.
 
-Never reuse SocialPromo database credentials, secrets, Telegram bot or wallet settings.
+Never reuse SocialPromo database credentials, secrets, Telegram bot credentials or wallet settings.
 
-## Not production-ready yet
-Email OTP and password reset, rate limiting, admin provisioning/audit logs, campaign funding and atomic budget reservation, real settlement, verified USDT BEP-20 deposits, secure withdrawals, social platform OAuth/API verification, end-to-end tests, load tests and an independent security review remain outstanding. Campaign creation currently saves drafts only. Submission approval does not credit withdrawable funds. Deposits and withdrawals are not enabled. Do not deploy for public financial use until these items are implemented and tested.
+## Smoke tests
+With the app running, run `npm run test:smoke`. Optionally set `TASKVIBE_BASE_URL` to a staging URL. This covers basic unauthenticated API behavior only; it is not a full end-to-end or security test.
+
+## Not production-ready
+- Campaign funding, atomic budget reservation and safe settlement are not implemented.
+- No live USDT BEP-20 deposits, chain scanner, wallet custody or withdrawals are enabled.
+- A verified BSC RPC endpoint, confirmed token contract, dedicated receiving wallet and independently secured withdrawal signer are still required before real-money features can be implemented safely.
+- Social-platform OAuth/API integrations and reliable task verification are not implemented.
+- Full authenticated E2E, concurrency/load tests and independent security review remain required.
+- Telegram notifications are configured as placeholders only and are not active.
+
+Campaigns currently save as drafts; proof approval does not credit withdrawable funds. Do not deploy for public financial use until the outstanding work is completed and tested.
