@@ -11,6 +11,7 @@ export async function POST(request:Request) {
     const email=parsed.data.email.toLowerCase(), db=await getDb();
     const user=await db.collection("users").findOne({email,status:"active"});
     if(!user || typeof user.passwordHash!=="string" || !(await verifyPassword(parsed.data.password,user.passwordHash))) return NextResponse.json({error:"Invalid email or password."},{status:401});
+    if(user.emailVerified!==true) return NextResponse.json({error:"Please verify your email before signing in."},{status:403});
     const role=user.role as Role;
     if(!["earner","advertiser","admin"].includes(role)) return NextResponse.json({error:"Account role is invalid."},{status:403});
     await setSession({id:user._id.toString(),name:user.name,email:user.email,role});
