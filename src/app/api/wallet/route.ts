@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { getCurrentUser } from "@/lib/auth";
 
@@ -13,7 +14,7 @@ export async function GET() {
     const [entries, account] = await Promise.all([
       db.collection("ledger").find({ userId: user.id }).sort({ createdAt: -1 }).limit(100).toArray(),
       db.collection("users").findOne(
-        { _id: (await import("mongodb")).ObjectId.createFromHexString(user.id) },
+        { _id: new ObjectId(user.id) },
         { projection: { walletAddress: 1, walletConnectedAt: 1 } },
       ),
     ]);
