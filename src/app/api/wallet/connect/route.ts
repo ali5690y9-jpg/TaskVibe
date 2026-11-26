@@ -4,11 +4,13 @@ import { getDb } from "@/lib/mongodb";
 import { getCurrentUser } from "@/lib/auth";
 import { isAddress, verifyMessage } from "viem";
 import { rateLimit } from "@/lib/rate-limit";
+import { hasSameOrigin } from "@/lib/request-origin";
 
 export const runtime = "nodejs";
 const BSC_CHAIN_ID = 56;
 
 export async function POST(request: Request) {
+  if (!hasSameOrigin(request)) return NextResponse.json({ error: "Invalid request origin." }, { status: 403 });
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 

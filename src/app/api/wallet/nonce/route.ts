@@ -4,11 +4,13 @@ import { getDb } from "@/lib/mongodb";
 import { getCurrentUser } from "@/lib/auth";
 import { isAddress } from "viem";
 import { rateLimit } from "@/lib/rate-limit";
+import { hasSameOrigin } from "@/lib/request-origin";
 
 export const runtime = "nodejs";
 const BSC_CHAIN_ID = 56;
 
 export async function POST(request: Request) {
+  if (!hasSameOrigin(request)) return NextResponse.json({ error: "Invalid request origin." }, { status: 403 });
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
@@ -26,8 +28,13 @@ export async function POST(request: Request) {
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 5 * 60 * 1000);
     const nonce = randomBytes(24).toString("hex");
+    const origin = new URL(request.url).origin;
     const message = [
       "TaskVibe wallet ownership verification",
+      `Domain: ${new URL(origin).host}`,
+      `URI: ${origin}/wallet`,
+      "Version: 1",
+      "Chain ID: 56",
       "",
       "This signature links your wallet to your TaskVibe account. It does not authorize token transfers.",
       "",
