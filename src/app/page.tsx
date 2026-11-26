@@ -10,7 +10,7 @@ const taskTypes = [
 const steps = [
   { number: "01", title: "Create your account", text: "Choose your path as an earner or advertiser." },
   { number: "02", title: "Complete real tasks", text: "Follow clear instructions and submit proof for review." },
-  { number: "03", title: "Get rewarded", text: "Track approved earnings and request eligible payouts." },
+  { number: "03", title: "Track your progress", text: "Follow submission reviews. Payouts will open only after payment verification is complete." },
 ];
 
 export default function Home() {
@@ -26,7 +26,7 @@ export default function Home() {
         <div className="hero-copy">
           <div className="eyebrow"><span className="pulse" /> THE SOCIAL TASK MARKETPLACE</div>
           <h1>Make every<br />scroll <em>count.</em></h1>
-          <p className="hero-text">Real tasks. Real people. Real rewards. Grow your online presence or earn by doing the things you already love.</p>
+          <p className="hero-text">A social-task marketplace in the making. Prepare campaigns, connect your wallet, and follow task reviews as the platform is brought online.</p>
           <div className="hero-actions"><a className="button" href="/register">Create your account <span>↗</span></a><a className="text-link" href="#how">See how it works <span>↓</span></a></div>
           <div className="trust-line"><div className="avatar-stack"><i>J</i><i>M</i><i>A</i><i>+</i></div><span>One platform. Two ways to grow.</span></div>
         </div>
@@ -47,7 +47,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="stats-strip"><div><strong>01</strong><span>One simple platform</span></div><div><strong>02</strong><span>Two ways to participate</span></div><div><strong>24/7</strong><span>Tasks when you're ready</span></div><div><strong>USDT</strong><span>BEP-20 payout direction</span></div></section>
+      <section className="preview-notice"><strong>Platform preview:</strong> Campaigns are draft-only and USDT deposits, earnings and withdrawals are not live yet.</section>
+
+      <section className="stats-strip"><div><strong>01</strong><span>One simple platform</span></div><div><strong>02</strong><span>Two ways to participate</span></div><div><strong>Preview</strong><span>Campaign publication pending</span></div><div><strong>USDT</strong><span>BEP-20 payout direction</span></div></section>
 
       <section className="section platforms" id="platforms">
         <div className="section-heading"><div><div className="eyebrow">YOUR FAVOURITE PLATFORMS</div><h2>Small actions.<br /><em>Big momentum.</em></h2></div><p>Discover social tasks across the platforms you use every day. Every campaign has clear requirements and a review process.</p></div>
@@ -57,7 +59,7 @@ export default function Home() {
 
       <section className="how-section" id="how"><div className="section-heading"><div><div className="eyebrow">GET STARTED IN THREE STEPS</div><h2>Good things<br />start <em>here.</em></h2></div><p>No complicated setup. Pick the role that fits you and take your next step.</p></div><div className="steps">{steps.map((step) => <article key={step.number}><span>{step.number}</span><h3>{step.title}</h3><p>{step.text}</p></article>)}</div></section>
 
-      <section className="roles-section" id="roles"><div className="role-intro"><div className="eyebrow">YOUR GOAL. YOUR DASHBOARD.</div><h2>One vibe.<br /><em>Two sides.</em></h2><p>Whether you're building a brand or building an extra income stream, TaskVibe brings the workflow together.</p></div><article className="role-card earner"><div className="role-label">FOR EARNERS <span>01 / 02</span></div><div className="role-symbol">↗</div><h3>Turn time<br />into rewards.</h3><p>Browse available campaigns, submit proof, and follow every approval from one clear dashboard.</p><a href="/register?role=earner">Create earner account <span>↗</span></a></article><article className="role-card advertiser"><div className="role-label">FOR ADVERTISERS <span>02 / 02</span></div><div className="role-symbol">✳</div><h3>Make your<br />brand matter.</h3><p>Launch campaigns, set budgets, review submissions, and see your community grow.</p><a href="/register?role=advertiser">Create advertiser account <span>↗</span></a></article></section>
+      <section className="roles-section" id="roles"><div className="role-intro"><div className="eyebrow">YOUR GOAL. YOUR DASHBOARD.</div><h2>One vibe.<br /><em>Two sides.</em></h2><p>Whether you're building a brand or building an extra income stream, TaskVibe brings the workflow together.</p></div><article className="role-card earner"><div className="role-label">FOR EARNERS <span>01 / 02</span></div><div className="role-symbol">↗</div><h3>Turn time<br />into rewards.</h3><p>When campaigns are published, browse tasks, submit proof, and follow review status from one dashboard.</p><a href="/register?role=earner">Create earner account <span>↗</span></a></article><article className="role-card advertiser"><div className="role-label">FOR ADVERTISERS <span>02 / 02</span></div><div className="role-symbol">✳</div><h3>Make your<br />brand matter.</h3><p>Prepare campaign drafts and review workflows. Funding and publication are not enabled yet.</p><a href="/register?role=advertiser">Create advertiser account <span>↗</span></a></article></section>
 
       <footer><a className="brand" href="#"><span className="brand-mark">t</span>taskvibe<span className="brand-dot">.</span></a><span>Built for people with things to do.</span><span>© 2026 TaskVibe</span></footer>
     </main>
