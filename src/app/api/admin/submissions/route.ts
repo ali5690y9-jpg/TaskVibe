@@ -5,6 +5,11 @@ import { getDb } from "@/lib/mongodb";
 import { getCurrentUser } from "@/lib/auth";
 export const runtime="nodejs";
 const schema=z.object({submissionId:z.string().length(24),decision:z.enum(["approved","rejected"]),reason:z.string().max(500).optional()});
+export async function GET(){
+ const user=await getCurrentUser();if(!user||user.role!=="admin")return NextResponse.json({error:"Admin access required."},{status:403});
+ try{const db=await getDb();const rows=await db.collection("submissions").find({status:"pending"}).sort({createdAt:1}).limit(100).toArray();return NextResponse.json({submissions:rows.map(row=>({id:row._id.toString(),campaignId:row.campaignId,advertiserId:row.advertiserId,earnerId:row.earnerId,proofUrl:row.proofUrl,note:row.note,createdAt:row.createdAt}))});}
+ catch{return NextResponse.json({error:"Could not load pending submissions."},{status:503});}
+}
 export async function POST(request:Request){
  const user=await getCurrentUser();if(!user||user.role!=="admin")return NextResponse.json({error:"Admin access required."},{status:403});
  const parsed=schema.safeParse(await request.json());if(!parsed.success)return NextResponse.json({error:"Invalid review request."},{status:400});
