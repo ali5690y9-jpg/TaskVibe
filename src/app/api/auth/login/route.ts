@@ -2,13 +2,16 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/mongodb";
 import { setSession, verifyPassword, type Role } from "@/lib/auth";
+import { rateLimit } from "@/lib/rate-limit";
 export const runtime = "nodejs";
 const schema=z.object({email:z.string().email().max(254),password:z.string().min(1).max(128)});
 export async function POST(request:Request) {
   try {
     const parsed=schema.safeParse(await request.json());
     if(!parsed.success) return NextResponse.json({error:"Invalid email or password."},{status:400});
-    const email=parsed.data.email.toLowerCase(), db=await getDb();
+    const email=parsed.data.email.toLowerCase();
+    if(!await rateLimit("login:"+email,10,900)) return NextResponse.json({error:"Too many sign-in attempts. Try again later."},{status:429});
+    const db=await getDb();
     const user=await db.collection("users").findOne({email,status:"active"});
     if(!user || typeof user.passwordHash!=="string" || !(await verifyPassword(parsed.data.password,user.passwordHash))) return NextResponse.json({error:"Invalid email or password."},{status:401});
     if(user.emailVerified!==true) return NextResponse.json({error:"Please verify your email before signing in."},{status:403});

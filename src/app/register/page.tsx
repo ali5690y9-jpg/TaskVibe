@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export default function RegisterPage(){
  const [name,setName]=useState(""),[email,setEmail]=useState(""),[password,setPassword]=useState(""),[role,setRole]=useState("earner"),[code,setCode]=useState(""),[step,setStep]=useState<"register"|"verify">("register"),[error,setError]=useState(""),[busy,setBusy]=useState(false);
+ useEffect(()=>{const requestedRole=new URLSearchParams(window.location.search).get("role");if(requestedRole==="advertiser"||requestedRole==="earner")setRole(requestedRole);},[]);
  async function register(e:React.FormEvent){e.preventDefault();setBusy(true);setError("");try{const r=await fetch("/api/auth/register",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({name,email,password,role})});const d=await r.json();if(!r.ok)throw new Error(d.error||"Registration failed");setStep("verify");}catch(x){setError(x instanceof Error?x.message:"Registration failed");}finally{setBusy(false);}}
  async function verify(e:React.FormEvent){e.preventDefault();setBusy(true);setError("");try{const r=await fetch("/api/auth/verify-email",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email,code})});const d=await r.json();if(!r.ok)throw new Error(d.error||"Verification failed");location.href=d.role==="advertiser"?"/advertiser":"/earner";}catch(x){setError(x instanceof Error?x.message:"Verification failed");}finally{setBusy(false);}}
  async function resend(){setBusy(true);setError("");try{const r=await fetch("/api/auth/resend-code",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email})});const d=await r.json();if(!r.ok)throw new Error(d.error||"Could not resend");setError("If verification is pending, a new code has been sent.");}catch(x){setError(x instanceof Error?x.message:"Could not resend");}finally{setBusy(false);}}
