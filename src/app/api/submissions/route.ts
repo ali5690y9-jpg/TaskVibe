@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getDb } from "@/lib/mongodb";
 import { getCurrentUser } from "@/lib/auth";
 export const runtime="nodejs";
-const schema=z.object({campaignId:z.string().length(24),proofUrl:z.string().url().max(2048),note:z.string().max(1000).optional()});
+const schema=z.object({campaignId:z.string().length(24),proofUrl:z.string().url().max(2048).refine(value=>new URL(value).protocol==="https:"),note:z.string().max(1000).optional()});
 export async function POST(request:Request){
  const user=await getCurrentUser();if(!user||user.role!=="earner")return NextResponse.json({error:"Earner access required."},{status:403});
  const parsed=schema.safeParse(await request.json());if(!parsed.success)return NextResponse.json({error:"Valid campaign ID and proof URL required."},{status:400});
