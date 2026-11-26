@@ -3,6 +3,14 @@
 import { useEffect, useState } from "react";
 
 type WalletProvider = Awaited<ReturnType<typeof import("@walletconnect/ethereum-provider").EthereumProvider.init>>;
+type RequestProvider = {
+  request(args: { method: string; params?: unknown[] }): Promise<unknown>;
+  session?: unknown;
+  connect?: () => Promise<void>;
+};
+declare global {
+  interface Window { ethereum?: RequestProvider }
+}
 let sharedProvider: WalletProvider | null = null;
 
 type WalletStatus = { walletAddress: string | null; note?: string };
@@ -31,26 +39,29 @@ export default function WalletConnectPanel() {
     setError("");
     setMessage("");
     try {
-      const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
-      if (!projectId) throw new Error("WalletConnect project ID is missing. Add NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to TaskVibe environment settings.");
-
-      if (!sharedProvider) {
-        const { EthereumProvider } = await import("@walletconnect/ethereum-provider");
-        sharedProvider = await EthereumProvider.init({
-          projectId,
-          optionalChains: [56],
-          showQrModal: true,
-          metadata: {
-            name: "TaskVibe",
-            description: "Connect your wallet to your TaskVibe account.",
-            url: window.location.origin,
-            icons: [],
-          },
-        });
+      let provider: RequestProvider;
+      if (window.ethereum) {
+        provider = window.ethereum;
+      } else {
+        const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
+        if (!projectId) throw new Error("No browser wallet detected. Add NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect QR pairing.");
+        if (!sharedProvider) {
+          const { EthereumProvider } = await import("@walletconnect/ethereum-provider");
+          sharedProvider = await EthereumProvider.init({
+            projectId,
+            optionalChains: [56],
+            showQrModal: true,
+            metadata: {
+              name: "TaskVibe",
+              description: "Connect your wallet to your TaskVibe account.",
+              url: window.location.origin,
+              icons: [],
+            },
+          });
+        }
+        provider = sharedProvider as unknown as RequestProvider;
+        if (!provider.session) await provider.connect?.();
       }
-
-      const provider = sharedProvider;
-      if (!provider.session) await provider.connect();
       let chainId = await provider.request({ method: "eth_chainId" }) as string;
       if (Number(BigInt(chainId)) !== 56) {
         await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0x38" }] });
