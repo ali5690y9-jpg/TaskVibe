@@ -50,7 +50,7 @@ export default function WalletConnectPanel() {
       }
 
       const provider = sharedProvider;
-      await provider.connect();
+      if (!provider.session) await provider.connect();
       let chainId = await provider.request({ method: "eth_chainId" }) as string;
       if (Number(BigInt(chainId)) !== 56) {
         await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0x38" }] });
