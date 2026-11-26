@@ -7,6 +7,7 @@ function digest(email:string,code:string){return createHmac("sha256",otpSecret()
 export async function issueEmailOtp(email:string,purpose:"verify_email"|"reset_password"){
  const db=await getDb(),now=new Date(),code=String(randomInt(0,1000000)).padStart(6,"0");
  const collection=db.collection("email_otps");
+ await collection.createIndex({expiresAt:1},{expireAfterSeconds:0});
  await collection.deleteMany({email,purpose,expiresAt:{$lte:now}});
  const recent=await collection.countDocuments({email,purpose,createdAt:{$gt:new Date(now.getTime()-15*60*1000)}});
  if(recent>=3)throw new Error("Too many codes requested. Please try again later.");
